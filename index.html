@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day Schedule - Date You Later</title>
+    <title>Day Schedule - League You Later</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dyl-cyan: rgb(14, 224, 231);
-            --dyl-coral: rgb(255, 107, 107);
-            --dyl-navy: rgb(44, 62, 80);
-            --dyl-white: rgb(255, 255, 255);
+            --lyl-cyan: rgb(14, 224, 231);
+            --lyl-coral: rgb(255, 107, 107);
+            --lyl-navy: rgb(44, 62, 80);
+            --lyl-white: rgb(255, 255, 255);
             --bg-primary: #ffffff;
             --bg-secondary: #fafafa;
             --text-primary: rgb(44, 62, 80);
@@ -35,6 +36,13 @@
             color: var(--text-primary);
             transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            margin-top: 75px;
+            flex: 1;
         }
         
         /* Logo */
@@ -47,7 +55,7 @@
         .logo-icon {
             font-weight: bold;
             font-size: 20px;
-            color: var(--dyl-cyan);
+            color: var(--lyl-cyan);
             letter-spacing: 2px;
             font-family: 'Righteous', cursive;
         }
@@ -55,14 +63,14 @@
         .logo-icon .flip-l {
             display: inline-block;
             transform: scaleX(-1);
-            margin-left: -2px;
+            margin-left: -4px;
         }
         
         .logo-text {
             font-size: 24px;
             font-weight: 600;
             font-family: 'Righteous', cursive;
-            color: var(--dyl-coral);
+            color: var(--lyl-coral);
             margin: 0;
             letter-spacing: 0.5px;
         }
@@ -70,13 +78,21 @@
         /* Header */
         .navbar {
             background-color: var(--card-bg);
-            border-bottom: 2px solid var(--dyl-cyan);
+            border-bottom: 2px solid var(--lyl-cyan);
             padding: 0.5rem 0;
             transition: background-color 0.3s ease;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
         }
         
         .navbar-toggler {
-            border-color: var(--dyl-coral);
+            border-color: var(--lyl-coral);
         }
         
         .navbar-toggler-icon {
@@ -95,7 +111,7 @@
         
         .navbar-nav .nav-link:hover {
             background-color: var(--bg-secondary);
-            color: var(--dyl-coral);
+            color: var(--lyl-coral);
         }
         
         /* Theme Toggle */
@@ -113,14 +129,14 @@
         
         .theme-toggle:hover {
             background-color: var(--bg-secondary);
-            color: var(--dyl-cyan);
+            color: var(--lyl-cyan);
         }
         
         /* Event Header - Breaking the box */
         .event-header {
             background-color: var(--card-bg);
             padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             border-radius: 8px;
             transition: all 0.3s ease;
             position: relative;
@@ -140,8 +156,8 @@
         }
         
         .btn-switch {
-            background-color: var(--dyl-coral);
-            color: var(--dyl-white);
+            background-color: var(--lyl-coral);
+            color: var(--lyl-white);
             border: none;
             padding: 0.6rem 1.8rem;
             font-weight: 600;
@@ -153,7 +169,7 @@
         .btn-switch:hover {
             background-color: #ff5252;
             transform: translateY(-2px) scale(1.05);
-            color: var(--dyl-white);
+            color: var(--lyl-white);
         }
         
         /* Tab Navigation - Overlapping design */
@@ -174,7 +190,7 @@
         .tab-navigation .nav-link {
             color: var(--text-primary);
             border: none;
-            padding: 0.6rem 1.2rem;
+            padding: 0.4rem 1.2rem;
             font-weight: 600;
             font-size: 1rem;
             transition: all 0.2s ease;
@@ -184,13 +200,13 @@
         }
         
         .tab-navigation .nav-link.active {
-            background-color: var(--dyl-cyan);
-            color: var(--dyl-navy);
+            background-color: var(--lyl-cyan);
+            color: var(--lyl-navy);
         }
         
         .tab-navigation .nav-link:hover:not(.active) {
             background-color: var(--bg-secondary);
-            color: var(--dyl-cyan);
+            color: var(--lyl-cyan);
         }
         
         /* View Toggle - Integrated into content */
@@ -223,50 +239,54 @@
         }
         
         .btn-view-toggle:hover {
-            background-color: var(--dyl-coral);
-            color: var(--dyl-white);
+            background-color: var(--lyl-coral);
+            color: var(--lyl-white);
         }
         
         /* Matches Container - Flowing into view toggle */
         .matches-container {
             background-color: var(--card-bg);
-            min-height: 500px;
+            min-height: calc(100vh - 400px);
             padding: 2rem;
             margin-bottom: 2rem;
             transition: all 0.3s ease;
+        }
+        
+        .matches-container .text-muted {
+            color: var(--text-secondary) !important;
         }
         
         /* Footer - Accent strip */
         footer {
             background-color: var(--card-bg);
             color: var(--text-primary);
-            padding: 1.5rem 0;
-            margin-top: 2rem;
+            padding: 1.2rem 0;
+            margin-top: 1.5rem;
             border-radius: 8px 8px 0 0;
         }
         
         footer a {
-            color: var(--dyl-coral);
+            color: var(--lyl-coral);
             text-decoration: none;
             transition: color 0.2s ease;
             font-size: 0.9rem;
         }
         
         footer a:hover {
-            color: var(--dyl-cyan);
+            color: var(--lyl-cyan);
         }
         
         /* Modal */
         .modal-content {
             border-radius: 8px;
-            border: 2px solid var(--dyl-cyan);
+            border: 2px solid var(--lyl-cyan);
             background-color: var(--card-bg);
             color: var(--text-primary);
         }
         
         .modal-header {
-            background-color: var(--dyl-cyan);
-            color: var(--dyl-navy);
+            background-color: var(--lyl-cyan);
+            color: var(--lyl-navy);
             border-bottom: none;
             padding: 1.2rem 1.5rem;
         }
@@ -276,7 +296,7 @@
         }
         
         .modal-body {
-            padding: 1.5rem;
+            padding: 1.2rem;
         }
         
         .form-select, .form-control {
@@ -288,7 +308,7 @@
         }
         
         .form-select:focus, .form-control:focus {
-            border-color: var(--dyl-cyan);
+            border-color: var(--lyl-cyan);
             box-shadow: none;
             background-color: var(--card-bg);
         }
@@ -300,7 +320,7 @@
         }
         
         /* Responsive adjustments */
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             .logo-text {
                 font-size: 18px;
             }
@@ -313,13 +333,59 @@
                 font-size: 1.1rem;
             }
             
+            .event-info p {
+                font-size: 0.8rem;
+            }
+            
+            .btn-switch {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            .tab-wrapper {
+                margin-bottom: -10px;
+            }
+            
+            .tab-navigation .nav-link {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .view-toggle h2 {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 479px) {
+            .event-info h1 {
+                font-size: 1rem;
+            }
+            
+            .event-info p {
+                font-size: 0.75rem;
+            }
+            
             .btn-switch {
                 padding: 0.5rem 1.2rem;
                 font-size: 0.85rem;
             }
             
-            .tab-wrapper {
-                margin-bottom: -10px;
+            .view-toggle h2 {
+                font-size: 0.9rem;
+            }
+            
+            .tab-navigation .nav-link {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-view-toggle {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            
+            .matches-container {
+                padding: 1rem;
             }
         }
     </style>
@@ -330,8 +396,8 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <div class="logo-container">
-                    <span class="logo-icon">DY<span class="flip-l">L</span></span>
-                    <p class="logo-text">Date You Later</p>
+                    <span class="logo-icon">LY<span class="flip-l">L</span></span>
+                    <p class="logo-text">League You Later</p>
                 </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -340,19 +406,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="me-1">▲</span>Home</a>
+                        <a class="nav-link" href="#"><i class="bi bi-house-door me-1"></i>Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="me-1">♥</span>Matches</a>
+                        <a class="nav-link" href="#"><i class="bi bi-play me-1"></i>Matches</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="me-1">●</span>Notifications</a>
+                        <a class="nav-link" href="#"><i class="bi bi-bell me-1"></i>Notifications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="me-1">◆</span>Account</a>
+                        <a class="nav-link" href="#"><i class="bi bi-person me-1"></i>Account</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="me-1">→</span>Logout</a>
+                        <a class="nav-link" href="#"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
                     </li>
                     <li class="nav-item">
                         <button class="theme-toggle" onclick="toggleTheme()">
@@ -365,12 +431,12 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container mt-3">
+    <div class="container main-content">
         <!-- Event Header -->
         <div class="event-header d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="event-info">
-                <h1>Speed Dating Night - Downtown Venue</h1>
-                <p>Organized by: Metropolitan Events | Date: December 20, 2025</p>
+                <h1>Speed Of Light 25/26 Mixed</h1>
+                <p>Lothian & Borders Volleyball | 20 Dec 2025</p>
             </div>
             <button class="btn btn-switch" data-bs-toggle="modal" data-bs-target="#switchModal">Switch</button>
         </div>
@@ -379,13 +445,13 @@
         <div class="tab-wrapper">
             <ul class="nav tab-navigation">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Day Schedule</a>
+                    <a class="nav-link active" href="#">Schedule</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Event Overview</a>
+                    <a class="nav-link" href="#">Overview</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Event Rules</a>
+                    <a class="nav-link" href="#">Rules</a>
                 </li>
             </ul>
         </div>
@@ -408,7 +474,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-0">&copy; 2025 Date You Later. All rights reserved.</p>
+                    <p class="mb-0">&copy; 2025 League You Later. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <a href="#" class="me-3">Privacy</a>
@@ -431,18 +497,22 @@
                     <div class="mb-3">
                         <label class="form-label">Select Organizer</label>
                         <select class="form-select">
-                            <option selected>Metropolitan Events</option>
-                            <option>City Singles</option>
-                            <option>Love Connect</option>
+                            <option selected>Lothian & Borders Volleyball</option>
+                            <option>Scottish Volleyball Association</option>
+                            <option>Su Ragazzi Volleyball Club</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Select Event</label>
+                        <label class="form-label">Select League</label>
                         <select class="form-select">
-                            <option selected>Speed Dating Night - Downtown Venue</option>
-                            <option>Weekend Mixer - Beach Club</option>
-                            <option>Professional Singles - Rooftop Bar</option>
+                            <option selected>Speed Of Light 25/26 Mixed</option>
+                            <option>Speed Of Light 25/26 Men</option>
+                            <option>Volleyball All-Stars League 2026 Women</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Date</label>
+                        <input type="date" class="form-control" value="2025-12-20">
                     </div>
                 </div>
                 <div class="modal-footer border-0">

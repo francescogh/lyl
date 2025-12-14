@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day Schedule - Date You Later</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dyl-cyan: rgb(14, 224, 231);
+            --dyl-coral: rgb(255, 107, 107);
+            --dyl-navy: rgb(44, 62, 80);
+            --dyl-white: rgb(255, 255, 255);
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafafa;
+            --text-primary: rgb(44, 62, 80);
+            --text-secondary: #6c757d;
+            --card-bg: #ffffff;
+            --border-color: #e8e8e8;
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #2d2d2d;
+            --bg-secondary: #3a3a3a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #c0c0c0;
+            --card-bg: #353535;
+            --border-color: #4a4a4a;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+        
+        /* Logo */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            font-weight: bold;
+            font-size: 20px;
+            color: var(--dyl-cyan);
+            letter-spacing: 2px;
+            font-family: 'Righteous', cursive;
+        }
+        
+        .logo-icon .flip-l {
+            display: inline-block;
+            transform: scaleX(-1);
+            margin-left: -2px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 600;
+            font-family: 'Righteous', cursive;
+            color: var(--dyl-coral);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Header */
+        .navbar {
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--dyl-cyan);
+            padding: 0.5rem 0;
+            transition: background-color 0.3s ease;
+        }
+        
+        .navbar-toggler {
+            border-color: var(--dyl-coral);
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 107, 107, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            position: relative;
+            border-radius: 6px;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            background-color: var(--bg-secondary);
+            color: var(--dyl-coral);
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            color: var(--dyl-cyan);
+        }
+        
+        /* Event Header - Breaking the box */
+        .event-header {
+            background-color: var(--card-bg);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .event-info h1 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+        
+        .event-info p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            font-size: 0.85rem;
+        }
+        
+        .btn-switch {
+            background-color: var(--dyl-coral);
+            color: var(--dyl-white);
+            border: none;
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-switch:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px) scale(1.05);
+            color: var(--dyl-white);
+        }
+        
+        /* Tab Navigation - Overlapping design */
+        .tab-wrapper {
+            position: relative;
+            margin-bottom: -15px;
+            z-index: 10;
+        }
+        
+        .tab-navigation {
+            background-color: var(--card-bg);
+            border-radius: 8px 8px 0 0;
+            padding: 0.4rem 1rem;
+            display: inline-flex;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-navigation .nav-link {
+            color: var(--text-primary);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            transform: skewX(-15deg);
+            background-color: transparent;
+            margin: 0 0.2rem;
+        }
+        
+        .tab-navigation .nav-link.active {
+            background-color: var(--dyl-cyan);
+            color: var(--dyl-navy);
+        }
+        
+        .tab-navigation .nav-link:hover:not(.active) {
+            background-color: var(--bg-secondary);
+            color: var(--dyl-cyan);
+        }
+        
+        /* View Toggle - Integrated into content */
+        .view-toggle {
+            background-color: var(--card-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .view-toggle h2 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .btn-view-toggle {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: none;
+            padding: 0.35rem 1rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            transform: skewX(-15deg);
+        }
+        
+        .btn-view-toggle:hover {
+            background-color: var(--dyl-coral);
+            color: var(--dyl-white);
+        }
+        
+        /* Matches Container - Flowing into view toggle */
+        .matches-container {
+            background-color: var(--card-bg);
+            min-height: 500px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        /* Footer - Accent strip */
+        footer {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        footer a {
+            color: var(--dyl-coral);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        footer a:hover {
+            color: var(--dyl-cyan);
+        }
+        
+        /* Modal */
+        .modal-content {
+            border-radius: 8px;
+            border: 2px solid var(--dyl-cyan);
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+        }
+        
+        .modal-header {
+            background-color: var(--dyl-cyan);
+            color: var(--dyl-navy);
+            border-bottom: none;
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .modal-header .btn-close {
+            filter: brightness(0);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-select, .form-control {
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .form-select:focus, .form-control:focus {
+            border-color: var(--dyl-cyan);
+            box-shadow: none;
+            background-color: var(--card-bg);
+        }
+        
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .logo-text {
+                font-size: 18px;
+            }
+            
+            .event-header {
+                padding: 1rem;
+            }
+            
+            .event-info h1 {
+                font-size: 1.1rem;
+            }
+            
+            .btn-switch {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.85rem;
+            }
+            
+            .tab-wrapper {
+                margin-bottom: -10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <div class="logo-container">
+                    <span class="logo-icon">DY<span class="flip-l">L</span></span>
+                    <p class="logo-text">Date You Later</p>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span class="me-1">▲</span>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span class="me-1">♥</span>Matches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span class="me-1">●</span>Notifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span class="me-1">◆</span>Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span class="me-1">→</span>Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle" onclick="toggleTheme()">
+                            <span class="theme-icon">◐</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-3">
+        <!-- Event Header -->
+        <div class="event-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="event-info">
+                <h1>Speed Dating Night - Downtown Venue</h1>
+                <p>Organized by: Metropolitan Events | Date: December 20, 2025</p>
+            </div>
+            <button class="btn btn-switch" data-bs-toggle="modal" data-bs-target="#switchModal">Switch</button>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-wrapper">
+            <ul class="nav tab-navigation">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Day Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Event Overview</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Event Rules</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <h2>All Matches</h2>
+            <button class="btn btn-view-toggle">Switch to My Matches</button>
+        </div>
+
+        <!-- Matches Container -->
+        <div class="matches-container">
+            <!-- Your match components will go here -->
+            <p class="text-muted text-center">Match schedule will be displayed here</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 Date You Later. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3">Privacy</a>
+                    <a href="#" class="me-3">Terms</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Switch Modal -->
+    <div class="modal fade" id="switchModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Switch Event View</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Select Organizer</label>
+                        <select class="form-select">
+                            <option selected>Metropolitan Events</option>
+                            <option>City Singles</option>
+                            <option>Love Connect</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Event</label>
+                        <select class="form-select">
+                            <option selected>Speed Dating Night - Downtown Venue</option>
+                            <option>Weekend Mixer - Beach Club</option>
+                            <option>Professional Singles - Rooftop Bar</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 20px;">Cancel</button>
+                    <button type="button" class="btn btn-switch">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+</html>
